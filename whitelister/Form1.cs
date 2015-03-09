@@ -90,7 +90,7 @@ namespace whitelister
 
                 rngSort.Sort(rngSort.Columns[1, Type.Missing], Excel.XlSortOrder.xlAscending,
                                 rngSort.Columns[2, Type.Missing], Type.Missing, Excel.XlSortOrder.xlAscending,
-                                Type.Missing, Excel.XlSortOrder.xlAscending,ss
+                                Type.Missing, Excel.XlSortOrder.xlAscending,
                                 Excel.XlYesNoGuess.xlYes, Type.Missing, Type.Missing,
                                 Excel.XlSortOrientation.xlSortColumns,
                                 Excel.XlSortMethod.xlPinYin,
