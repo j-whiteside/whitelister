@@ -20,6 +20,8 @@ namespace whitelister
         Excel.Application xlApp = new Excel.Application();
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
+
+
         Boolean appFailed = false;
 
         public Form1()
@@ -63,28 +65,35 @@ namespace whitelister
 
         public void fileModification(String path)
         {
+
             try
             {
-                int numberOfRowsInteger = File.ReadLines(filepathEdit).Count();
                 //xlWorkBook = xlApp.Workbooks.Open(filepathEdit, 0, false, 2, "", "", true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "\t", false, false, 0, false, 1, 0);
                 xlWorkBook = xlApp.Workbooks.Open(filepathEdit);
                 xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
+                int numberOfRowsInteger = File.ReadLines(filepathEdit).Count();
+
                 //Delete all records older than a week
 
-                xlWorkSheet.Range[G2, 7].EntireColumn.NumberFormat = "MM/dd/yyyy";
+                //xlWorkSheet.Range[G2, 7].EntireColumn.NumberFormat = "MM/dd/yyyy";
 
                 DateTime lastWeekDateTime = getLastWeek();
 
-                /*
+                textBox1.Text = lastWeekDateTime.ToString();
+                
+
+                
                 for(int i = 1; i < numberOfRowsInteger ; i++)
                 {
-                    if (xlWorkSheet.Cells[i,7].Contains(lastWeekDateTime))
+                    if (xlWorkSheet.Cells[i,7] < (lastWeekDateTime))
                     {
-            
+                        Excel.Range range = xlWorkSheet.get_Range(i, Type.Missing);
+                        range.Delete(Excel.XlDeleteShiftDirection.xlShiftUp);
                     }
                 }
 
+                /*
                 //Order by spam index
                 Excel.Range rngSort = xlWorkSheet.get_Range("A2", "J" + numberOfRowsInteger);
 
@@ -101,6 +110,9 @@ namespace whitelister
 
                 xlWorkBook.Save();
                  */
+
+                xlWorkBook.Save();
+                xlWorkBook.Close(false, Type.Missing, Type.Missing);
             }
             catch (Exception ex)
             {
