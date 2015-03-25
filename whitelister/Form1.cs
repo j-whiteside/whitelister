@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+//using Marshal = System.Runtime.InteropServices.Marshal;
 
 namespace whitelister
 {
@@ -20,7 +21,7 @@ namespace whitelister
         private Excel.Application xlApp;
         private Excel.Workbooks xlWorkBooks;
         private Excel.Workbook xlWorkBook;
-        protected Excel.Sheets xlWorksheets;
+        protected Excel.Sheets xlWorkSheets;
         protected Excel.Worksheet xlWorkSheet;
 
 
@@ -76,12 +77,11 @@ namespace whitelister
                 
             xlWorkBooks = xlApp.Workbooks;
             xlWorkBook = xlWorkBooks.Open(filepathEdit, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
-            xlWorksheets = xlWorkBook.Worksheets;
-            xlWorkSheet = (Excel.Worksheet)xlWorksheets[1];
+            xlWorkSheets = xlWorkBook.Worksheets;
+            xlWorkSheet = (Excel.Worksheet)xlWorkSheets[1];
             xlWorkSheet.Select(Type.Missing);
 
-            int numberOfRowsInteger = File.ReadLines(@"C:\exceltest\spamEdit.csv").Count();
-            textBox1.Text = numberOfRowsInteger.ToString();
+            int numberOfRowsInteger = File.ReadLines(@"C:\exceltest\spam.csv").Count();
 
             //Delete all records older than a week
 
@@ -126,14 +126,11 @@ namespace whitelister
             xlWorkBook.Close(false, Type.Missing, Type.Missing);
             xlApp.Quit();
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(xlWorkBook);
-            System.Runtime.InteropServices.Marshal.FinalReleaseComObject(xlApp);
-
-            
-            
+            releaseObject(xlWorkSheet);
+            releaseObject(xlWorkSheets);
+            releaseObject(xlWorkBook);
+            releaseObject(xlWorkBooks);
+            releaseObject(xlApp);
             
         }
 
@@ -142,11 +139,20 @@ namespace whitelister
             try
             {
                 if (excelObject != null)
+                {
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(excelObject);
+                    excelObject = null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                excelObject = null;
+                MessageBox.Show("Unable to release the Object " + ex.Message);
             }
             finally
             {
-                excelObject = null;
+                GC.Collect();
             }
         }
 
