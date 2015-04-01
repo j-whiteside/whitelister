@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using CsvHelper;
+using CsvHelper.TypeConversion;
+using CsvHelper.Configuration;
 
 namespace whitelister
 {
@@ -75,33 +77,33 @@ namespace whitelister
         public void spamLogParser(String path)
         {
             StreamReader file = new StreamReader(path);
-            CsvReader csv = new CsvReader(file);
-            IEnumerable<DataRecord> records = csv.GetRecords<DataRecord>();
+            CsvConfiguration config = new CsvConfiguration();
+            config.IgnoreQuotes = true;
+            config.IgnoreHeaderWhiteSpace = true;
+            CsvReader csv = new CsvReader(file, config);
+            IEnumerable<DataRecord> lines = csv.GetRecords<DataRecord>();
+            String currentEmployeeEmail;
 
-            foreach (var rec in records) // Each record will be fetched and printed on the screen
+            foreach (DataRecord line in lines.Take(25)) // Each record will be fetched and printed on the screen
             {
-                String spamScore = rec.name;
-                MessageBox.Show(spamScore);
+                currentEmployeeEmail = line.RecipientAddress;
                 
                 //Response.Write(string.Format("Name : {0}, Sex : {1}, Occupation : {2} <br/>", rec.name, rec.sex, rec.occupation));
             }
             
             file.Close();
-            
-            
-            String sampleParse = csv.GetField(1);
-
-            logger(sampleParse);
-
-            //return recipient;
         }
 
 
         public class DataRecord // Test record class
         {
-            public string spamScore { get; set; }
-            public string Sender { get; set; }
-            public string occupation { get; set; }
+            public string SpamScore { get; set; }
+            public string SenderEMailOnList { get; set; }
+            public string SenderDomainOnList { get; set; }
+            public string SenderAddress { get; set; }
+            public string RecipientAddress { get; set; }
+            public string Subject { get; set; }
+            public string Date { get; set; }
         }
 
 
