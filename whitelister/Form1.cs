@@ -87,8 +87,6 @@ namespace whitelister
             foreach (DataRecord line in lines.Take(25)) // Each record will be fetched and printed on the screen
             {
                 currentEmployeeEmail = line.RecipientAddress;
-                
-                //Response.Write(string.Format("Name : {0}, Sex : {1}, Occupation : {2} <br/>", rec.name, rec.sex, rec.occupation));
             }
             
             file.Close();
@@ -106,6 +104,12 @@ namespace whitelister
             public string Date { get; set; }
         }
 
+
+        public void emailComposition()
+        {
+            String htmlHeader, htmlBody, htmlFooter;
+            htmlHeader = ;
+        }
 
         public void emailer(String subject, String recipient, String body)
         {
